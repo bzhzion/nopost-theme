@@ -38,7 +38,7 @@ $featured_id = 0;
         <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
       </h1>
 
-      <?php if ( get_the_excerpt() ) : ?>
+      <?php if ( has_excerpt() ) : ?>
       <p class="np-featured__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 30 ) ); ?></p>
       <?php endif; ?>
 
@@ -94,7 +94,7 @@ if ( $grid->have_posts() ) : ?>
           <h3 class="np-card__title">
             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
           </h3>
-          <p class="np-card__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 18 ) ); ?></p>
+          <?php if ( has_excerpt() ) : ?><p class="np-card__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 18 ) ); ?></p><?php endif; ?>
           <div class="np-card__meta">
             <span class="np-meta-date"><?php echo get_the_date( '' ); ?></span>
             <span class="np-meta-sep">·</span>
