@@ -19,13 +19,11 @@ jobs:
       - name: Create release zip
         run: |
           mkdir -p dist
-          zip -r dist/nopost-theme.zip . \
-            --exclude "*.git*" \
-            --exclude ".github/*" \
-            --exclude "dist/*" \
-            --exclude "*.md" \
-            --exclude "node_modules/*" \
-            --include "style.css"
+          cd ..
+          zip -r $GITHUB_WORKSPACE/dist/nopost-theme.zip nopost-theme/ \
+            --exclude "nopost-theme/.git/*" \
+            --exclude "nopost-theme/.github/*" \
+            --exclude "nopost-theme/dist/*"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
