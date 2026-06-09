@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create release zip
+        run: |
+          mkdir -p dist
+          zip -r dist/nopost-theme.zip . \
+            --exclude "*.git*" \
+            --exclude ".github/*" \
+            --exclude "dist/*" \
+            --exclude "*.md" \
+            --exclude "node_modules/*" \
+            --include "style.css"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nopost-theme.zip
+          path: dist/nopost-theme.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/nopost-theme.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
