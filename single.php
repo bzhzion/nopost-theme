@@ -29,9 +29,7 @@ the_post();
 
         <h1 class="np-single-title"><?php the_title(); ?></h1>
 
-        <?php if ( get_the_excerpt() ) : ?>
-        <p class="np-single-excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
-        <?php endif; ?>
+
 
         <div class="np-single-meta">
           <span class="np-meta-date">
