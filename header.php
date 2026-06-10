@@ -3,6 +3,7 @@
 <head>
   <meta charset="<?php bloginfo('charset'); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/favicon.svg">
   <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -10,11 +11,14 @@
 
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="site-logo" href="<?php echo esc_url(home_url('/')); ?>">
+    <a class="site-logo" href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php echo esc_attr(get_bloginfo('name')); ?>">
       <?php
       $logo_id = get_theme_mod('custom_logo');
+      $logo_svg = get_template_directory() . '/assets/logo.svg';
       if ($logo_id) {
         echo wp_get_attachment_image($logo_id, 'full', false, ['class' => 'site-logo__img']);
+      } elseif (file_exists($logo_svg)) {
+        echo file_get_contents($logo_svg); // phpcs:ignore WordPress.WP.AlternativeFunctions
       } else {
         echo '<span class="site-logo__text">' . esc_html(get_bloginfo('name')) . '</span>';
       }
