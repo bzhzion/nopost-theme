@@ -4,15 +4,26 @@
  */
 get_header();
 
-$featured = nopost_get_latest( 1, 0 );
-$featured_id = 0;
+$paged    = max( 1, (int) get_query_var( 'paged' ) );
+$per_page = 9;
+
+// Exclude featured (1 post) from total count for pagination
+$total_published = (int) wp_count_posts( 'post' )->publish;
+$total_pages     = max( 1, (int) ceil( ( $total_published - 1 ) / $per_page ) );
+
+// Grid offset: page 1 skips featured (1 post), then 9 per page
+$grid_offset = ( $paged - 1 ) * $per_page + 1;
 ?>
 
 <main id="main-content">
 
-<?php if ( $featured->have_posts() ) :
-  $featured->the_post();
-  $featured_id = get_the_ID();
+<?php if ( 1 === $paged ) :
+  $featured    = nopost_get_latest( 1, 0 );
+  $featured_id = 0;
+
+  if ( $featured->have_posts() ) :
+    $featured->the_post();
+    $featured_id = get_the_ID();
 ?>
 
 <!-- FEATURED ARTICLE -->
@@ -62,9 +73,11 @@ $featured_id = 0;
 <!-- PUB après featured -->
 <?php nopost_ad( 'nopost_ad_hero' ); ?>
 
+<?php endif; // end page 1 featured block ?>
+
 <!-- GRID ARTICLES -->
 <?php
-$grid = nopost_get_latest( 9, 1 );
+$grid = nopost_get_latest( $per_page, $grid_offset );
 if ( $grid->have_posts() ) : ?>
 <section class="np-section">
   <div class="np-section__inner">
@@ -107,7 +120,7 @@ if ( $grid->have_posts() ) : ?>
       <?php endwhile; wp_reset_postdata(); ?>
     </div>
 
-    <?php nopost_pagination(); ?>
+    <?php nopost_pagination( $total_pages ); ?>
   </div>
 </section>
 <?php endif; ?>

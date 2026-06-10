@@ -199,12 +199,16 @@ function nopost_posts_per_page( $query ) {
 }
 
 // ── PAGINATION ───────────────────────────────────────────────────────────────
-function nopost_pagination() {
-    $pages = paginate_links( [
+function nopost_pagination( $total_pages = 0 ) {
+    $args = [
         'type'      => 'array',
         'prev_text' => '&larr;',
         'next_text' => '&rarr;',
-    ] );
+    ];
+    if ( $total_pages > 0 ) {
+        $args['total'] = $total_pages;
+    }
+    $pages = paginate_links( $args );
     if ( ! $pages ) return;
     echo '<nav class="pagination" aria-label="' . esc_attr__( 'Navigation des pages', 'nopost' ) . '">';
     foreach ( $pages as $page ) {
