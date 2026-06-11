@@ -612,7 +612,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── SINGLE ARTICLE ──────────────────────────────────────── */
 .np-single-wrap {
-  max-width: var(--text-max);
+  max-width: var(--max-w);
   margin: var(--sp-3xl) auto;
   padding: 0 var(--sp-xl);
 }

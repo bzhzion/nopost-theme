@@ -48,7 +48,7 @@ function nopost_enqueue() {
         get_stylesheet_directory_uri() . '/assets/js/ads.js',
         [],
         wp_get_theme()->get( 'Version' ),
-        [ 'strategy' => 'async', 'in_footer' => false ]
+        [ 'strategy' => 'defer', 'in_footer' => false ]
     );
 
     if ( is_singular() && comments_open() ) {
