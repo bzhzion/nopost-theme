@@ -433,10 +433,36 @@ function nopost_check_theme_update( $transient ) {
             'url'         => 'https://github.com/bzhzion/nopost-theme',
             'package'     => 'https://github.com/bzhzion/nopost-theme/releases/download/v' . $latest_ver . '/nopost-theme.zip',
         ];
+        $sha_url  = 'https://github.com/bzhzion/nopost-theme/releases/download/v' . $latest_ver . '/nopost-theme.zip.sha256';
+        $sha_resp = wp_remote_get( $sha_url, [ 'timeout' => 10, 'headers' => [ 'User-Agent' => 'nopost-theme-updater' ] ] );
+        if ( ! is_wp_error( $sha_resp ) && 200 === wp_remote_retrieve_response_code( $sha_resp ) ) {
+            $sha = trim( wp_remote_retrieve_body( $sha_resp ) );
+            if ( preg_match( '/^[a-f0-9]{64}$/', $sha ) ) {
+                set_transient( 'nopost_expected_sha256', $sha, HOUR_IN_SECONDS );
+            }
+        }
     }
 
     return $transient;
 }
+
+add_filter( 'upgrader_pre_download', function( $reply, $package, $upgrader, $hook_extra ) {
+    if ( ! isset( $hook_extra['theme'] ) || $hook_extra['theme'] !== get_option( 'stylesheet' ) ) {
+        return $reply;
+    }
+    $expected_sha = get_transient( 'nopost_expected_sha256' );
+    if ( ! $expected_sha ) return $reply;
+
+    $tmpfile = download_url( $package );
+    if ( is_wp_error( $tmpfile ) ) return $tmpfile;
+
+    $actual_sha = hash_file( 'sha256', $tmpfile );
+    if ( ! hash_equals( $expected_sha, $actual_sha ) ) {
+        @unlink( $tmpfile );
+        return new WP_Error( 'nopost_sha256_mismatch', __( 'Mise à jour annulée : checksum SHA256 invalide.', 'nopost' ) );
+    }
+    return $tmpfile;
+}, 10, 4 );
 
 add_filter( 'upgrader_source_selection', function( $source, $remote_source, $upgrader, $args ) {
     if ( ! isset( $args['hook_extra']['theme'] ) || $args['hook_extra']['theme'] !== get_option( 'stylesheet' ) ) {
@@ -464,11 +490,6 @@ add_action( 'template_redirect', function() {
     if ( is_admin() ) return;
     if ( ! isset( $_SERVER['QUERY_STRING'] ) ) return;
     if ( ! preg_match( '/\bauthor=\d+\b/', $_SERVER['QUERY_STRING'] ) ) return;
-    $author = get_queried_object();
-    if ( $author instanceof WP_User ) {
-        wp_redirect( get_author_posts_url( $author->ID, $author->user_nicename ), 301 );
-    } else {
-        wp_redirect( home_url( '/' ), 302 );
-    }
+    wp_redirect( home_url( '/' ), 302 );
     exit;
 } );
