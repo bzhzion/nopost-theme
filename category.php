@@ -11,7 +11,7 @@ $cat_obj = get_queried_object();
 <div class="np-section__inner">
 
   <header class="np-archive-header">
-    <h1 class="np-page-title"><?php single_cat_title(); ?></h1>
+    <h1 class="np-page-title"><?php echo esc_html( single_cat_title( '', false ) ); ?></h1>
     <?php if ( category_description() ) : ?>
     <p class="np-archive-desc"><?php echo wp_kses_post( category_description() ); ?></p>
     <?php endif; ?>

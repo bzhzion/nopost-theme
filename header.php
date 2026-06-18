@@ -18,10 +18,7 @@
       if ($logo_id) {
         echo wp_get_attachment_image($logo_id, 'full', false, ['class' => 'site-logo__img']);
       } elseif (file_exists($logo_svg)) {
-        $svg = file_get_contents( $logo_svg ); // phpcs:ignore WordPress.WP.AlternativeFunctions
-        $svg = preg_replace( '/<script\b[^>]*>[\s\S]*?<\/script>/i', '', $svg );
-        $svg = preg_replace( '/ on\w+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]*)/i', '', $svg );
-        echo $svg;
+        echo '<img src="' . esc_url( get_template_directory_uri() . '/assets/logo.svg' ) . '" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" class="site-logo__img">';
       } else {
         echo '<span class="site-logo__text">' . esc_html(get_bloginfo('name')) . '</span>';
       }
