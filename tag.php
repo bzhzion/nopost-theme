@@ -12,11 +12,11 @@ get_header();
     <h1 class="np-page-title">
       <?php
       /* translators: %s = tag name */
-      printf( esc_html__( 'Tag : %s', 'nopost' ), '<span>' . single_tag_title( '', false ) . '</span>' );
+      printf( esc_html__( 'Tag : %s', 'nopost' ), '<span>' . esc_html( single_tag_title( '', false ) ) . '</span>' );
       ?>
     </h1>
     <?php if ( tag_description() ) : ?>
-    <p class="np-archive-desc"><?php echo tag_description(); ?></p>
+    <p class="np-archive-desc"><?php echo wp_kses_post( tag_description() ); ?></p>
     <?php endif; ?>
   </header>
 

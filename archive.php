@@ -11,7 +11,7 @@ get_header();
   <header class="np-archive-header">
     <h1 class="np-page-title"><?php echo get_the_archive_title(); ?></h1>
     <?php if ( get_the_archive_description() ) : ?>
-    <p class="np-archive-desc"><?php echo get_the_archive_description(); ?></p>
+    <p class="np-archive-desc"><?php echo wp_kses_post( get_the_archive_description() ); ?></p>
     <?php endif; ?>
   </header>
 

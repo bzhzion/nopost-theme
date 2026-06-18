@@ -13,7 +13,7 @@ $cat_obj = get_queried_object();
   <header class="np-archive-header">
     <h1 class="np-page-title"><?php single_cat_title(); ?></h1>
     <?php if ( category_description() ) : ?>
-    <p class="np-archive-desc"><?php echo category_description(); ?></p>
+    <p class="np-archive-desc"><?php echo wp_kses_post( category_description() ); ?></p>
     <?php endif; ?>
   </header>
 

@@ -18,7 +18,10 @@
       if ($logo_id) {
         echo wp_get_attachment_image($logo_id, 'full', false, ['class' => 'site-logo__img']);
       } elseif (file_exists($logo_svg)) {
-        echo file_get_contents($logo_svg); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        $svg = file_get_contents( $logo_svg ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        $svg = preg_replace( '/<script\b[^>]*>[\s\S]*?<\/script>/i', '', $svg );
+        $svg = preg_replace( '/ on\w+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]*)/i', '', $svg );
+        echo $svg;
       } else {
         echo '<span class="site-logo__text">' . esc_html(get_bloginfo('name')) . '</span>';
       }

@@ -425,6 +425,7 @@ function nopost_check_theme_update( $transient ) {
     }
 
     $latest_ver = ltrim( $release['tag_name'] ?? '', 'v' );
+    if ( ! preg_match( '/^\d+\.\d+(\.\d+)?$/', $latest_ver ) ) return $transient;
     if ( version_compare( $latest_ver, $current_ver, '>' ) ) {
         $transient->response[ $theme_slug ] = [
             'theme'       => $theme_slug,
@@ -436,3 +437,38 @@ function nopost_check_theme_update( $transient ) {
 
     return $transient;
 }
+
+add_filter( 'upgrader_source_selection', function( $source, $remote_source, $upgrader, $args ) {
+    if ( ! isset( $args['hook_extra']['theme'] ) || $args['hook_extra']['theme'] !== get_option( 'stylesheet' ) ) {
+        return $source;
+    }
+    $style_css = trailingslashit( $source ) . 'style.css';
+    if ( ! file_exists( $style_css ) ) {
+        return new WP_Error( 'nopost_update_invalid', __( 'Paquet thème invalide : style.css manquant.', 'nopost' ) );
+    }
+    $theme_data = get_file_data( $style_css, [ 'Theme Name' => 'Theme Name' ] );
+    if ( $theme_data['Theme Name'] !== 'nopost' ) {
+        return new WP_Error( 'nopost_update_invalid', __( 'Paquet thème invalide : nom incorrect.', 'nopost' ) );
+    }
+    return $source;
+}, 10, 4 );
+
+add_action( 'send_headers', function() {
+    if ( headers_sent() ) return;
+    header( 'X-Frame-Options: SAMEORIGIN' );
+    header( 'X-Content-Type-Options: nosniff' );
+    header( 'Referrer-Policy: strict-origin-when-cross-origin' );
+} );
+
+add_action( 'template_redirect', function() {
+    if ( is_admin() ) return;
+    if ( ! isset( $_SERVER['QUERY_STRING'] ) ) return;
+    if ( ! preg_match( '/\bauthor=\d+\b/', $_SERVER['QUERY_STRING'] ) ) return;
+    $author = get_queried_object();
+    if ( $author instanceof WP_User ) {
+        wp_redirect( get_author_posts_url( $author->ID, $author->user_nicename ), 301 );
+    } else {
+        wp_redirect( home_url( '/' ), 302 );
+    }
+    exit;
+} );

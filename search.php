@@ -15,8 +15,8 @@ get_header();
       printf(
         /* translators: %1$d = count, %2$s = search query */
         esc_html( _n( '%1$d résultat pour « %2$s »', '%1$d résultats pour « %2$s »', $wp_query->found_posts, 'nopost' ) ),
-        $wp_query->found_posts,
-        '<em>' . esc_html( get_search_query() ) . '</em>'
+        (int) $wp_query->found_posts,
+        esc_html( get_search_query() )
       );
       ?>
     </h1>
