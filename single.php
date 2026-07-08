@@ -51,6 +51,13 @@ the_post();
         <hr class="np-single-rule">
       </header>
 
+      <!-- IMAGE À LA UNE -->
+      <?php if ( has_post_thumbnail() ) : ?>
+      <div class="np-single-thumbnail">
+        <?php the_post_thumbnail( 'full', [ 'class' => 'np-single-thumbnail__img' ] ); ?>
+      </div>
+      <?php endif; ?>
+
       <!-- PUB début article -->
       <?php nopost_ad( 'nopost_ad_article' ); ?>
 

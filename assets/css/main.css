@@ -646,6 +646,19 @@ h1, h2, h3, h4, h5, h6 {
 
 .np-single-meta { margin-bottom: var(--sp-lg); }
 
+/* FEATURED IMAGE */
+.np-single-thumbnail {
+  margin-bottom: var(--sp-xl);
+  border-radius: var(--radius-lg, 8px);
+  overflow: hidden;
+}
+.np-single-thumbnail__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 /* ARTICLE CONTENT */
 .np-single-content {
   font-size: 1.07rem;
