@@ -9,14 +9,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_action( 'wp_enqueue_scripts', 'nopost_enqueue', 20 );
 
 function nopost_enqueue() {
-    // Google Fonts preconnect
-    wp_enqueue_style( 'nopost-fonts-preconnect', 'https://fonts.googleapis.com', [], null );
-    wp_enqueue_style( 'nopost-fonts-preconnect-gstatic', 'https://fonts.gstatic.com', [], null );
-
-    // Google Fonts — EB Garamond + Cormorant Garamond
+    // EB Garamond et Cormorant Garamond, servies par le CDN de l'association et non par
+    // Google : une page qui charge une police depuis les serveurs de Google leur transmet
+    // l'adresse IP de chaque visiteur, ce qui a deja valu des condamnations (LG Munchen, 2022).
+    //
+    // cdn.nopost.fr et non cdn.breizhzion.com : le CDN est servi sur les 14 domaines de
+    // l'association et les URL de ses feuilles sont relatives, donc charger celle du domaine
+    // du site garde la feuille ET les .woff2 sur la meme origine, sans saut inter-domaine ni
+    // contrainte CORS.
     wp_enqueue_style(
-        'nopost-google-fonts',
-        'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap',
+        'nopost-fonts',
+        'https://cdn.nopost.fr/fonts/nopost-fonts.css',
         [],
         null
     );
@@ -25,7 +28,7 @@ function nopost_enqueue() {
     wp_enqueue_style(
         'nopost-main',
         get_stylesheet_directory_uri() . '/assets/css/main.css',
-        [ 'nopost-google-fonts' ],
+        [ 'nopost-fonts' ],
         wp_get_theme()->get( 'Version' )
     );
 
@@ -61,10 +64,13 @@ add_filter( 'autoptimize_filter_js_exclude', function( $exclude ) {
     return $exclude . ',assets/js/ads.js';
 } );
 
-// Preconnect hints
+// Preconnect vers le CDN de l'association, plus vers Google.
+// Les deux lignes ne sont pas un doublon : la premiere ouvre la connexion pour la FEUILLE,
+// la seconde pour la POLICE, recuperee en mode CORS et qui n'utiliserait donc pas la
+// connexion ouverte sans `crossorigin`.
 add_action( 'wp_head', function() {
-    echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
-    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+    echo '<link rel="preconnect" href="https://cdn.nopost.fr">' . "\n";
+    echo '<link rel="preconnect" href="https://cdn.nopost.fr" crossorigin>' . "\n";
 }, 1 );
 
 // ── ADSENSE ───────────────────────────────────────────────────────────────────
