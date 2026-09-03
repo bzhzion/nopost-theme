@@ -65,7 +65,7 @@ get_header();
       <?php
       printf(
         /* translators: %s = search query */
-        esc_html__( 'Aucun résultat pour « %s ». Essayez avec d'autres mots.', 'nopost' ),
+        esc_html__( 'Aucun résultat pour « %s ». Essayez avec d’autres mots.', 'nopost' ),
         esc_html( get_search_query() )
       );
       ?>
