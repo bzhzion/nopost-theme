@@ -12,6 +12,31 @@ L'historique git reste la source de vérité pour ce qui précède.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-19
+
+⛔ **Cette version existe parce que le site tournait encore en 1.2.3 alors que les
+correctifs ci-dessous etaient dans le depot depuis le 3 septembre.** Le releve du
+2026-09-18 a trouve `nopost.fr` appelant toujours `fonts.googleapis.com`. Deux causes
+cumulees : aucun tag n'avait ete pose depuis, et **le workflow de release ne deploie
+rien**, il publie une archive que quelqu'un doit installer. Un artefact que personne
+n'installe laisse un site en retard indefiniment, sans qu'aucune CI ne vire au rouge.
+
+### Sécurité
+
+- **Les polices ne sont plus chargees chez Google** (commit du 2026-09-03, anterieur a ce
+  fichier). EB Garamond et Cormorant Garamond viennent de `cdn.nopost.fr`. Une page qui
+  charge une police depuis les serveurs de Google leur transmet l'**adresse IP de chaque
+  visiteur**, ce qui a deja valu une condamnation (LG Munchen, 2022).
+- ⚠️ Les deux `preconnect` vers Google restants etaient enregistres par `wp_enqueue_style`,
+  donc emis en `<link rel="stylesheet" href="https://fonts.googleapis.com">` : le
+  navigateur les demandait **vraiment** comme feuilles de style. Une indication de
+  performance devenue une requete reelle.
+
+### Corrigé
+
+- **Erreur fatale sur la page de recherche** (`search.php`, commit du 2026-09-03,
+  anterieur a ce fichier). Elle est restee en production tout ce temps pour la meme raison.
+
 ### Corrigé
 
 - **Convention de fins de ligne du parc posée dans `.gitattributes`.** Le bloc `run:` d'un
