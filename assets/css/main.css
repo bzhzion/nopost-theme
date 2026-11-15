@@ -767,6 +767,34 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0;
 }
 
+/* SIGNATURE */
+.np-single-signature {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+  margin-top: var(--sp-xxl);
+  padding-top: var(--sp-xl);
+  border-top: 1px solid var(--rule);
+  font-size: 0.9rem;
+  color: var(--ink-mid);
+}
+
+.np-single-signature__author {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.np-single-signature__author svg {
+  flex-shrink: 0;
+}
+
+.np-single-signature__ai {
+  font-style: italic;
+}
+
 /* TAGS */
 .np-single-tags {
   display: flex;

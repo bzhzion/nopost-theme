@@ -66,6 +66,15 @@ the_post();
         <?php the_content(); ?>
       </div>
 
+      <!-- SIGNATURE -->
+      <footer class="np-single-signature">
+        <span class="np-single-signature__author">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <?php the_author(); ?>
+        </span>
+        <span class="np-single-signature__ai"><?php esc_html_e( 'Généré à l’aide de l’intelligence artificielle', 'nopost' ); ?></span>
+      </footer>
+
       <!-- TAGS -->
       <?php
       $tags = get_the_tags();

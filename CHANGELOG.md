@@ -12,6 +12,15 @@ L'historique git reste la source de vérité pour ce qui précède.
 
 ## [Unreleased]
 
+
+## [1.4.0] - 2026-11-15
+
+### Ajouté
+- **Signature en fin d'article** : le nom de l'auteur et la mention « Généré à l'aide de
+  l'intelligence artificielle », sous le contenu de chaque article. Les articles sont générés par
+  IA et signés « Nono le robot », comme l'indique désormais la page « À propos ». Texte en
+  `--ink-mid` (contraste d'environ 7,9:1 sur fond blanc) : `--ink-light` ne passe pas le niveau AA.
+
 ### Modifié
 - `.gitignore` : toute variante `.env.*` est ignorée, sauf `.env.example`. Une copie de sauvegarde `.env.bak-*` porte les mêmes secrets que `.env` (règle de parc du 2026-11-03).
 
